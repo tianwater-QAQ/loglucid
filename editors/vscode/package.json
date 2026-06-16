@@ -1,0 +1,47 @@
+{
+  "name": "lucid-logs",
+  "displayName": "Lucid Logs",
+  "description": "Feed your recent logs to an AI: de-noised, redacted, token-budgeted — one command. Works in VS Code and Cursor.",
+  "version": "0.1.0",
+  "publisher": "tianwater",
+  "license": "Apache-2.0",
+  "repository": { "type": "git", "url": "https://github.com/tianwater-QAQ/loglucid" },
+  "engines": { "vscode": "^1.75.0" },
+  "categories": ["Other"],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "lucid.feedLogs",
+        "title": "Lucid: Feed recent logs to AI",
+        "category": "Lucid"
+      }
+    ],
+    "configuration": {
+      "title": "Lucid Logs",
+      "properties": {
+        "lucid.command": {
+          "type": "string",
+          "default": "loglucid",
+          "description": "The loglucid CLI command. If it isn't on PATH, set an absolute path (or use a wrapper like 'python -m loglucid.cli')."
+        },
+        "lucid.maxTokens": {
+          "type": "number",
+          "default": 2000,
+          "description": "Token budget for the packed log block."
+        },
+        "lucid.last": {
+          "type": "number",
+          "default": 120,
+          "description": "How many recent log lines to consider."
+        },
+        "lucid.redact": {
+          "type": "boolean",
+          "default": true,
+          "description": "Redact secrets/PII before the logs leave your machine (recommended)."
+        }
+      }
+    }
+  }
+}

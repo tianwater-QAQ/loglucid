@@ -42,3 +42,15 @@ def test_header_counts_and_prompt():
 
 def test_empty_is_handled():
     assert "no log records" in build_feed([], max_tokens=100)
+
+
+def test_error_grouping_story_line():
+    recs = []
+    for i in range(2):
+        try:
+            raise ValueError("bad")
+        except ValueError as e:
+            recs.append(Record(ts=1000.0 + i, level=ERROR, logger="app",
+                               msg="boom", fields={}, error=capture(e)))
+    out = build_feed(recs, max_tokens=9999)
+    assert "# errors: ValueError ×2" in out

@@ -45,7 +45,14 @@ def main(argv=None) -> int:
     fp.add_argument("--level", default="INFO")
     fp.add_argument("--no-redact", action="store_true")
     fp.add_argument("--prompt", action="store_true", help="Prepend a question for the LLM.")
+
+    sub.add_parser("mcp", help="Run the MCP server (stdio) for Claude Code / Cursor.")
+
     a = ap.parse_args(argv)
+
+    if a.cmd == "mcp":
+        from .mcp_server import serve
+        return serve()
 
     if a.cmd == "feed":
         text = sys.stdin.read() if a.file == "-" else open(a.file, encoding="utf-8", errors="replace").read()

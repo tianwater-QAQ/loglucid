@@ -101,7 +101,13 @@ def build_feed(records: list[Record], *, last: int = 50, min_level: int = INFO,
 
     summary = " ".join(f"{v} {k}" for k, v in counts.most_common())
     header = f"# {app} — last {len(recs)} log lines ({rng}) · {summary}"
-    blocks = [header, body]
+    blocks = [header]
+    # Error grouping — a one-line "what failed" story above the logs.
+    err_types = Counter(r.error.type for r in recs if r.error is not None)
+    if err_types:
+        story = " · ".join(f"{t} ×{n}" if n > 1 else t for t, n in err_types.most_common())
+        blocks.append(f"# errors: {story}")
+    blocks.append(body)
     if prompt:
         blocks.insert(0, "Here are my app's recent logs. What went wrong and how do I fix it?\n")
     return "\n".join(blocks) + "\n"

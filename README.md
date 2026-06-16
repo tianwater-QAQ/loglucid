@@ -80,6 +80,29 @@ pipes you automatically get the compact format — which is exactly what an LLM 
   if installed, a built-in fallback otherwise),
 - optionally prepends a question prompt.
 
+It also prints a one-line **error story** above the logs when something failed,
+e.g. `# errors: ValueError ×2 · KeyError ×1`, so the model sees *what* broke at a glance.
+
+## MCP server — let the agent read the logs itself
+
+loglucid ships an [MCP](https://modelcontextprotocol.io) server, so **Claude Code,
+Cursor, or any MCP client can pull your logs on their own** — no copy-paste. It
+exposes `lucid_feed_file` and `lucid_feed_text` (same denoise + redact + budget).
+
+Register the command with your client, e.g. in Claude Code / Cursor's MCP config:
+
+```json
+{
+  "mcpServers": {
+    "loglucid": { "command": "loglucid", "args": ["mcp"] }
+  }
+}
+```
+
+Then just ask: *"read app.log and tell me what's failing"* — the agent calls the
+tool, gets a clean redacted block within its token budget, and answers. The server
+speaks MCP stdio (JSON-RPC) with zero third-party dependencies.
+
 ## Structured errors
 
 `log.error("...", exc=e)` (or `log.exception("...")`) captures `err.type`, `err.msg`

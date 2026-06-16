@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loglucid"
+version = "0.1.0"
+description = "A logging library that's pretty for humans and friendly for LLMs: dual output + one-call feed_ai() to paste recent logs into ChatGPT/Claude (denoised, redacted, token-budgeted)."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Tianwater" }]
+keywords = ["logging", "llm", "ai", "debugging", "structured-logging", "observability", "redaction"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: System :: Logging",
+    "Intended Audience :: Developers",
+]
+
+[project.optional-dependencies]
+redact = ["logscrub"]   # fuller secret/PII detectors; a built-in fallback is used if absent
+tokens = ["tiktoken"]   # accurate token counting; a chars/4 estimate is used if absent
+
+[project.urls]
+Homepage = "https://github.com/tianwater-QAQ/loglucid"
+
+[project.scripts]
+loglucid = "loglucid.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["loglucid*"]
